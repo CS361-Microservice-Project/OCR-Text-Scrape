@@ -8,12 +8,12 @@ A microservice that takes in an image and returns scraped text.
 3. cd OCR-Text-Scrape
 
    (Windows)
-5. python -m venv venv
-6. venv\Scripts\activate
+4. python -m venv venv
+5. venv\Scripts\activate
 
    (Mac/Linux)
-5. python3 -m venv venv
-6. source venv/bin/activate
+4. python3 -m venv venv
+5. source venv/bin/activate
 
-7. pip install -r requirements.txt
-8. python main.py
+6. pip install -r requirements.txt
+7. python main.py
