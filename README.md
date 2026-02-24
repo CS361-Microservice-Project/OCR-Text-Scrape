@@ -1,7 +1,7 @@
 # OCR-Text-Scrape
 
 ## Description
-Scrapes text from an image and sends text to main program.
+Scrapes text from an image, deskews it before OCR, and sends text to main program.
 
 ## Requesting Data
 To request data, a ZeroMQ context server must be opened on a selected port on the client-side. 
