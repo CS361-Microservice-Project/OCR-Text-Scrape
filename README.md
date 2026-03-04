@@ -30,4 +30,4 @@ from an image. At this point the received data is a regular string and can be ma
 # Receives response from server-side on port 5555
 message = socket.recv()
 ```
-![UML Diagram] (UML_Diagram.png)
+![UML Diagram](UML%20Diagram.png)
