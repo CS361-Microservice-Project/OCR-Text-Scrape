@@ -33,7 +33,6 @@ def deskew_image(image):
     return cv2.warpAffine(gray, matrix, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
 
 
-
 def get_image(filename):
     filepath = fr"{filename}"
 
@@ -51,8 +50,6 @@ def create_pdf(image):
         f.write(pdf) # pdf type is bytes by default
     
     return None
-
-
 
 
 def ocr_scrape(image):
@@ -73,8 +70,6 @@ def ocr_scrape(image):
         print("timed out")
         print(timeout_error)
         return f'ERROR: {timeout_error}'
-
-
 
 
 
@@ -99,6 +94,7 @@ while True:
         else:
 
             socket.send_string(f"Command '{message.decode()}' not recognized")
+
 
 
 
