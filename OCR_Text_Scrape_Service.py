@@ -34,14 +34,29 @@ def deskew_image(image):
 
 
 
-
-def ocr_scrape(filename):
-    print("Starting OCR")
+def get_image(filename):
     filepath = fr"{filename}"
 
     image = cv2.imread(filepath)
     if image is None:
         return f'ERROR: Could not read image: {filepath}'
+
+    return image
+
+
+def create_pdf(image):
+    # Get a searchable PDF
+    pdf = pytesseract.image_to_pdf_or_hocr(deskewed_image, extension='pdf')
+    with open('test.pdf', 'w+b') as f:
+        f.write(pdf) # pdf type is bytes by default
+    
+    return None
+
+
+
+
+def ocr_scrape(image):
+    print("Starting OCR")
 
     # Deskews image before OCR to improve text extraction on rotated scans/photos
     deskewed_image = deskew_image(image)
@@ -51,23 +66,13 @@ def ocr_scrape(filename):
         text = pytesseract.image_to_string(deskewed_image, timeout=2)
         print("\nOCR extraction successful!\n")
         print(f"OCR INTERPRETATION:\n{text}") # Timeout after 2 seconds
+        return text
 
     except RuntimeError as timeout_error:
         # Tesseract processing is terminated
         print("timed out")
         print(timeout_error)
         return f'ERROR: {timeout_error}'
-
-
-
-
-
-    # Get a searchable PDF
-    pdf = pytesseract.image_to_pdf_or_hocr(deskewed_image, extension='pdf')
-    with open('test.pdf', 'w+b') as f:
-        f.write(pdf) # pdf type is bytes by default
-
-    return text
 
 
 
@@ -94,6 +99,7 @@ while True:
         else:
 
             socket.send_string(f"Command '{message.decode()}' not recognized")
+
 
 
 
