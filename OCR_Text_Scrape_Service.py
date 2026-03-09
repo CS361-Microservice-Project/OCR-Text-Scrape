@@ -10,6 +10,11 @@ socket.bind("tcp://*:5555")
 
 
 def deskew_image(image):
+    """
+    Purpose: Takes image, modifies resolution and other characteristics for higher OCR accuracy.
+    Params: image - an image with text on it for the OCR to scrape from.
+    Returns: gray - the same image tweaked for better text scraping
+    """   
     # Converts to grayscale, estimates image rotation from foreground pixels, and rotates image upright
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(gray, (3, 3), 0)
@@ -20,20 +25,15 @@ def deskew_image(image):
     if coords is None:
         return gray
 
-    rect = cv2.minAreaRect(coords)
-    angle = rect[-1]
-    if angle < -45:
-        angle = -(90 + angle)
-    else:
-        angle = -angle
-
-    (h, w) = gray.shape[:2]
-    center = (w // 2, h // 2)
-    matrix = cv2.getRotationMatrix2D(center, angle, 1.0)
-    return cv2.warpAffine(gray, matrix, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+    return gray
 
 
 def get_image(filename):
+    """
+    Purpose: Takes in filename, searches for image of said filename in Resource directory and validates it.
+    Params: filename - a string, the name of the image to be scraped.
+    Returns: image - an image object.
+    """   
     filepath = fr"{filename}"
 
     image = cv2.imread(filepath)
@@ -44,6 +44,11 @@ def get_image(filename):
 
 
 def create_pdf(image):
+    """
+    Purpose: Takes image, and creates a PDF from it.
+    Params: image - an image with text on it to be turned into PDF.
+    Returns: None
+    """   
     # Get a searchable PDF
     pdf = pytesseract.image_to_pdf_or_hocr(deskewed_image, extension='pdf')
     with open('test.pdf', 'w+b') as f:
@@ -53,8 +58,19 @@ def create_pdf(image):
 
 
 def ocr_scrape(image):
+    """
+    Purpose: Main funcion. Takes an image and scrapes text from it.
+    Params: image - an image object to scrape text from.
+    Returns: text - a string containing the text from the scraped image.
+    """   
     print("Starting OCR")
 
+    # Validate image and get
+    image = get_image(filename)
+    
+    # Get a searchable PDF
+    create_pdf(image)
+    
     # Deskews image before OCR to improve text extraction on rotated scans/photos
     deskewed_image = deskew_image(image)
 
@@ -94,6 +110,7 @@ while True:
         else:
 
             socket.send_string(f"Command '{message.decode()}' not recognized")
+
 
 
 
